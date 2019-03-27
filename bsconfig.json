@@ -1,19 +1,21 @@
+
 {
   "name": "simple-catenable-deque",
-  "version": "0.1.0",
+  "reason": {
+    "react-jsx": 2
+  },
   "sources": {
     "dir" : "src",
     "subdirs" : true
   },
-  "package-specs": {
+  "package-specs": [{
     "module": "commonjs",
     "in-source": true
-  },
+  }],
   "suffix": ".bs.js",
+  "namespace": true,
   "bs-dependencies": [
+    "reason-react"
   ],
-  "warnings": {
-    "error" : "+101"
-  },
   "refmt": 3
 }

@@ -1,0 +1,34 @@
+/*??? use sass */
+.render-box {
+    
+}
+
+.title-box.deep {
+    background-color: pink;
+}
+
+.title-box.shallow {
+    background-color: aquamarine;
+}
+.title-box {
+
+}
+.content-box {
+    display: inline-flex;
+    flex-direction: row;
+    padding: 0.5em;
+}
+.no-box {
+    display: flex;
+    flex-direction: row;
+}
+.content-member {
+    border: 1px solid black;
+    margin-right: 0.5em;
+}
+.int-box {
+    text-align: center;
+    
+    height: 1.5em;
+    width: 1.5em;
+}

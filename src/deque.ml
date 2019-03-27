@@ -91,8 +91,31 @@ module SimpleCatenableDeque(D : Deque)  =
                                (cons f2 (force m2))),
                     Lazy_snoc_(repr m1, r1, f2, repr m2)),
                r2)
-                   
+
+      let rec string_of_cat : 'a.('a->string)->'a cat->string = fun string_of_elem -> 
+        (*FIXME*)
+        let base q = Printf.sprintf "Shallow(%s ...)" (string_of_elem (D.head q)) in
+        function
+        |Shallow(q) -> base q
+        |Deep(l, Susp(lambda, _), r) -> 
+          let m = string_of_cat base (lambda()) in
+          Printf.sprintf "Deep(%s, %s, %s)" (string_of_elem (D.head l)) m (string_of_elem (D.head r))
     end
 
+
+module ArrayDeque  = 
+  struct
+    type 'a queue = 'a array
+    let empty = [| |]
+    let isEmpty q = (Array.length q)==0
+    let cons x q = Array.concat [[| x |]; q]
+    let head q = Array.get q 0
+    let tail q = Array.sub q 1 ((Array.length q) - 1)
+    let snoc q x= Array.concat [q; [| x |]]
+    let last q = Array.get q ((Array.length q)- 1)
+    let init q = Array.sub q 0 ((Array.length q) - 1)
+  end
+
+module CatDeque = SimpleCatenableDeque(ArrayDeque)
 
 

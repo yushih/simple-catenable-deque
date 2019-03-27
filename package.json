@@ -1,23 +1,31 @@
 {
   "name": "simple-catenable-deque",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
   "scripts": {
-    "bsb": "bsb",
-    "watchml": "bsb -make-world -w",
-    "watchjs": "watchify main.js -d -o main.out.js -v",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack -w",
+    "webpack:production": "NODE_ENV=production webpack",
+    "server": "webpack-dev-server"
   },
-  "keywords": [],
+  "keywords": [
+    "BuckleScript"
+  ],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "browserify": "^16.2.3",
-    "bs-platform": "^5.0.0",
-    "watchify": "^3.11.1"
-  },
+  "license": "MIT",
   "dependencies": {
-    "treantjs": "file:treant-js"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "reason-react": ">=0.4.0"
+  },
+  "devDependencies": {
+    "bs-platform": "^5.0.0",
+    "copy-webpack-plugin": "^5.0.2",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.8"
   }
 }
