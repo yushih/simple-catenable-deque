@@ -1,14 +1,5 @@
 open Deque
 
-let deq = ref(CatDeque.empty)
-
-for (i in 1 to 10) {
-  deq := CatDeque.cons(i, deq^)
-}
-
-deq := CatDeque.concat(deq^, deq^)
-
-let text = ReasonReact.string
 
 
 /*
@@ -36,6 +27,7 @@ let render_suspend = s => {
   </div>
 }
 */
+let text = ReasonReact.string;
 
 let render_deque = q => {
   let rec render_cat : 'a.(('a=>ReasonReact.reactElement, CatDeque.cat('a))=>ReasonReact.reactElement) = (render_elem, q) => {
@@ -75,20 +67,64 @@ let render_deque = q => {
         </div>
       </div>
     }//switch
-
-
   };
 
   let render_number = i => <div className="int-box content-member">{text(string_of_int(i))}</div>;
   render_cat(render_number, q)
 }
 
-let component = ReasonReact.statelessComponent("Main");
+type state = {
+  current_deq: CatDeque.cat(int),
+  next_cons: string
+}
+
+type action = 
+    | NextConsChange(string)
+    | Cons
+;
+
+let component = ReasonReact.reducerComponent("Main")
 
 let make = _children => {
     ...component,
+
+    initialState: ()=> 
+      /*
+         let deq = ref(CatDeque.empty)
+
+         for (i in 1 to 10) {
+         deq := CatDeque.cons(i, deq^)
+         }
+
+         deq := CatDeque.concat(deq^, deq^)
+       */
+    {
+      current_deq: CatDeque.empty,
+      next_cons: "0"
+    },
+
+    reducer: (action, state) => 
+      switch (action) {
+      |NextConsChange(value) => ReasonReact.Update({...state, next_cons: value})
+      |Cons => {
+        let next_cons = int_of_string(state.next_cons);
+        ReasonReact.Update(
+          {...state, 
+           current_deq: CatDeque.cons(next_cons, state.current_deq),
+           next_cons: string_of_int(next_cons+1)
+          })
+        }
+       },//switch (action)
+
     render: self =>
-      <div className="root-box">
-        {render_deque(deq^)}
+      <div>
+        <input 
+          type_="text" 
+          value=(self.state.next_cons)
+          onChange=(e => self.send(NextConsChange(ReactEvent.Form.target(e)##value)))></input>
+        <button onClick=(_e => self.send(Cons))>{text("cons")}</button>
+        <div className="root-box">
+          {render_deque(self.state.current_deq)}
+        </div>
       </div>
 };
