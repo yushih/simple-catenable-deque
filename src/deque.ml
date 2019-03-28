@@ -63,7 +63,7 @@ module SimpleCatenableDeque(D : Deque)  =
           if not (tooSmall ft) then Deep(ft, m, r) 
           else if isEmpty (force m) then Shallow(dappendL ft r)
           else Deep((dappendL ft (head (force m))),
-                    Susp((fun ()->(force m)), Lazy_tail_force(repr m)),
+                    Susp((fun ()->tail (force m)), Lazy_tail_force(repr m)),
                     r)
 
       let rec concat : 'a. 'a cat -> 'a cat ->'a cat = fun deq1 deq2 ->

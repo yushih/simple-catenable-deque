@@ -1,6 +1,6 @@
 /*??? use sass */
 .render-box {
-    
+    display: inline-block; /* so that its width fits content */
 }
 
 .title-box.deep {

@@ -75,12 +75,17 @@ let render_deque = q => {
 
 type state = {
   current_deq: CatDeque.cat(int),
-  next_cons: string
+  next_cons: string,
+  next_snoc: string,
 }
 
 type action = 
-    | NextConsChange(string)
-    | Cons
+  | NextConsChange(string)
+  | Cons
+  | NextSnocChange(string)
+  | Snoc
+  | ConcatSelf
+  | Tail
 ;
 
 let component = ReasonReact.reducerComponent("Main")
@@ -100,7 +105,8 @@ let make = _children => {
        */
     {
       current_deq: CatDeque.empty,
-      next_cons: "0"
+      next_cons: "0",
+      next_snoc: "0",
     },
 
     reducer: (action, state) => 
@@ -114,6 +120,18 @@ let make = _children => {
            next_cons: string_of_int(next_cons+1)
           })
         }
+      |NextSnocChange(value) => ReasonReact.Update({...state, next_snoc: value})
+      |Snoc => {
+        let next_snoc = int_of_string(state.next_snoc);
+        ReasonReact.Update(
+          {...state, 
+           current_deq: CatDeque.snoc(state.current_deq, next_snoc),
+           next_snoc: string_of_int(next_snoc-1)
+          })
+        }
+       |ConcatSelf => 
+         ReasonReact.Update({...state, current_deq: CatDeque.concat(state.current_deq, state.current_deq)})
+       |Tail => ReasonReact.Update({...state, current_deq: CatDeque.tail(state.current_deq)})
        },//switch (action)
 
     render: self =>
@@ -123,6 +141,18 @@ let make = _children => {
           value=(self.state.next_cons)
           onChange=(e => self.send(NextConsChange(ReactEvent.Form.target(e)##value)))></input>
         <button onClick=(_e => self.send(Cons))>{text("cons")}</button>
+        <br />
+
+        <input 
+          type_="text" 
+          value=(self.state.next_snoc)
+          onChange=(e => self.send(NextSnocChange(ReactEvent.Form.target(e)##value)))></input>
+        <button onClick=(_e => self.send(Snoc))>{text("snoc")}</button>
+        <br/>
+
+        <button onClick=(_e => self.send(ConcatSelf))>(text("concat with self"))</button>
+
+        <button onClick=(_e => self.send(Tail))>(text("tail"))</button>
         <div className="root-box">
           {render_deque(self.state.current_deq)}
         </div>
