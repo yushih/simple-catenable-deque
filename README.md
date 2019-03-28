@@ -1,16 +1,4 @@
+Visualization of the Simple catenable deque from section 11.2 of "Purely Functional Data Structure". Implemented with ReasonReact (UI part) and OCaml (algorithm part). 
 
-
-# Build
-```
-npm run build
-```
-
-# Watch
-
-```
-npm run watch
-```
-
-
-# Editor
-If you use `vscode`, Press `Windows + Shift + B` it will build automatically
+Screenshot:
+![screenshot](screenshot.jpg?raw=true "Screenshot")
