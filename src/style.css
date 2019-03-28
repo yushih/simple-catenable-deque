@@ -16,15 +16,17 @@
 .content-box {
     display: inline-flex;
     flex-direction: row;
-    padding: 0.5em;
+/*    padding: 0.5em;*/
 }
-.no-box {
+.basic-box {
     display: flex;
     flex-direction: row;
+    border: 1px solid black;
+    margin: 0.2em;
 }
 .content-member {
     border: 1px solid black;
-    margin-right: 0.5em;
+    margin: 0.2em;
 }
 .int-box {
     text-align: center;

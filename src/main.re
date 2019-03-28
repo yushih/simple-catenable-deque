@@ -1,6 +1,5 @@
+open Printf
 open Deque
-
-
 
 /*
 let render_suspend = s => {
@@ -17,28 +16,18 @@ let render_suspend = s => {
 }
 */
 
-/*
-let render_suspend = s => {
-  let CatDeque.Susp(lambda, repr) = s;
-  let v = lambda();
-  <div>
-     {text("middle")}
-     {render_queue(v)}
-  </div>
-}
-*/
 let text = ReasonReact.string;
 
 let render_deque = q => {
   let rec render_cat : 'a.(('a=>ReasonReact.reactElement, CatDeque.cat('a))=>ReasonReact.reactElement) = (render_elem, q) => {
     let render_base = q => { // box already rendered by caller
       let elems = Array.map(render_elem, q);
-      <div className="no-box">
-        {if (Array.length(elems)==0) {
-           text("[]");
+      <div className="basic-box">
+         (if (Array.length(elems)==0) {
+           <span dangerouslySetInnerHTML={{ "__html": "&empty;" }} />
          } else {
-           ReasonReact.array(elems)}
-         }
+           ReasonReact.array(elems)
+         })
       </div>
     };
     
@@ -77,6 +66,7 @@ type state = {
   current_deq: CatDeque.cat(int),
   next_cons: string,
   next_snoc: string,
+  expr: string,
 }
 
 type action = 
@@ -107,6 +97,7 @@ let make = _children => {
       current_deq: CatDeque.empty,
       next_cons: "0",
       next_snoc: "0",
+      expr: "empty",
     },
 
     reducer: (action, state) => 
@@ -117,7 +108,8 @@ let make = _children => {
         ReasonReact.Update(
           {...state, 
            current_deq: CatDeque.cons(next_cons, state.current_deq),
-           next_cons: string_of_int(next_cons+1)
+           next_cons: string_of_int(next_cons+1),
+           expr: sprintf("cons(%d, %s)", next_cons, state.expr)
           })
         }
       |NextSnocChange(value) => ReasonReact.Update({...state, next_snoc: value})
@@ -126,12 +118,22 @@ let make = _children => {
         ReasonReact.Update(
           {...state, 
            current_deq: CatDeque.snoc(state.current_deq, next_snoc),
-           next_snoc: string_of_int(next_snoc-1)
+           next_snoc: string_of_int(next_snoc-1),
+           expr: sprintf("snoc(%s, %d)", state.expr, next_snoc)
           })
         }
        |ConcatSelf => 
-         ReasonReact.Update({...state, current_deq: CatDeque.concat(state.current_deq, state.current_deq)})
-       |Tail => ReasonReact.Update({...state, current_deq: CatDeque.tail(state.current_deq)})
+         ReasonReact.Update({
+           ...state, 
+           current_deq: CatDeque.concat(state.current_deq, state.current_deq),
+           expr: sprintf("concat(%s, %s)", state.expr, state.expr)
+         })
+       |Tail => 
+         ReasonReact.Update({
+           ...state, 
+           current_deq: CatDeque.tail(state.current_deq),
+           expr: sprintf("tail(%s)", state.expr),
+         })
        },//switch (action)
 
     render: self =>
@@ -152,7 +154,8 @@ let make = _children => {
 
         <button onClick=(_e => self.send(ConcatSelf))>(text("concat with self"))</button>
 
-        <button onClick=(_e => self.send(Tail))>(text("tail"))</button>
+        <button disabled=(CatDeque.isEmpty(self.state.current_deq)) onClick=(_e => self.send(Tail))>(text("tail"))</button>
+        <div>(text(self.state.expr))</div>
         <div className="root-box">
           {render_deque(self.state.current_deq)}
         </div>
