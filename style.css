@@ -1,0 +1,36 @@
+/*??? use sass */
+.render-box {
+    display: inline-block; /* so that its width fits content */
+}
+
+.title-box.deep {
+    background-color: pink;
+}
+
+.title-box.shallow {
+    background-color: aquamarine;
+}
+.title-box {
+
+}
+.content-box {
+    display: inline-flex;
+    flex-direction: row;
+/*    padding: 0.5em;*/
+}
+.basic-box {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid black;
+    margin: 0.2em;
+}
+.content-member {
+    border: 1px solid black;
+    margin: 0.2em;
+}
+.int-box {
+    text-align: center;
+    
+    height: 1.5em;
+    width: 1.5em;
+}
